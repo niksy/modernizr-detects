@@ -42,16 +42,14 @@ module.exports = function ( grunt ) {
 					'testProp'
 				],
 				'excludeTests': [
-					'contains',
-					'flash'
+					'contains'
 				],
 				'customTests': [
 					'feature-detects/adblock.js',
 					'feature-detects/appearance.js',
 					'feature-detects/ie.js',
 					'feature-detects/print.js',
-					'feature-detects/proxybrowser.js',
-					'feature-detects/xflash.js'
+					'feature-detects/proxybrowser.js'
 				]
 			}
 		}
