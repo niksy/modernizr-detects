@@ -13,11 +13,12 @@
 /* DOC
 
 This is really simple and dumb solution for print functionality
-detection - we hide print button only if we are on mobile platform.
+detection - we say platform doesn’t support printing only if
+it’s mobile platform.
 
 */
 
 define(['Modernizr'], function( Modernizr ) {
-  rPlatform = /(iphone|ipod|((?:android)?.*?mobile)|blackberry|nokia)|kindle|silk/i;
-  Modernizr.addTest('print', !rPlatform.test( navigator.userAgent ));
+  var regex = /(iphone|ipod|((?:android)?.*?mobile)|blackberry|nokia)|kindle|silk/i;
+  Modernizr.addTest('print', !regex.test( navigator.userAgent ));
 });

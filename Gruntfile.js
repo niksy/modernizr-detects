@@ -1,4 +1,6 @@
-module.exports = function (grunt) {
+/* jshint node:true */
+/* global module */
+module.exports = function ( grunt ) {
 
 	grunt.initConfig({
 
@@ -13,17 +15,31 @@ module.exports = function (grunt) {
 				commitFiles: ['-a'],
 				createTag: true,
 				tagName: '%VERSION%',
-				tagMessage: 'Version %VERSION%',
+				tagMessage: '',
 				push: false
+			}
+		},
+
+		jshint: {
+			main: {
+				options: {
+					jshintrc: '.jshintrc'
+				},
+				src: [
+					'feature-detects/**/*.js'
+				]
 			}
 		}
 
 	});
 
-	grunt.loadNpmTasks( 'grunt-bump' );
+	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-bump');
 
-	grunt.registerTask( 'releasePatch', ['bump-only:patch', 'bump-commit'] );
-	grunt.registerTask( 'releaseMinor', ['bump-only:minor', 'bump-commit'] );
-	grunt.registerTask( 'releaseMajor', ['bump-only:major', 'bump-commit'] );
+	grunt.registerTask('stylecheck', ['jshint:main']);
+	grunt.registerTask('default', ['stylecheck']);
+	grunt.registerTask('releasePatch', ['bump-only:patch', 'default', 'bump-commit']);
+	grunt.registerTask('releaseMinor', ['bump-only:minor', 'default', 'bump-commit']);
+	grunt.registerTask('releaseMajor', ['bump-only:major', 'default', 'bump-commit']);
 
 };
