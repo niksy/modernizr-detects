@@ -824,7 +824,13 @@
   ;
 
   var createElement = function() {
-    return document.createElement.apply(document, arguments);
+    if (typeof document.createElement !== 'function') {
+      // This is the case in IE7, where the type of createElement is "object".
+      // For this reason, we cannot call apply() as Object is not a Function.
+      return document.createElement(arguments[0]);
+    } else {
+      return document.createElement.apply(document, arguments);
+    }
   };
   
 
@@ -1004,7 +1010,7 @@
     }
 
     // Otherwise do it properly
-    var afterInit, i, prop, before;
+    var afterInit, i, propsLength, prop, before;
 
     // If we don't have a style element, that means
     // we're running async or after the core tests,
@@ -1024,7 +1030,8 @@
       }
     }
 
-    for ( i in props ) {
+    propsLength = props.length;
+    for ( i = 0; i < propsLength; i++ ) {
       prop = props[i];
       before = mStyle.style[prop];
 
@@ -1346,92 +1353,186 @@ Unfortunately, UA sniffing is only reliable solution for prxy browser detection.
   var regex = /Opera Mini|Silk/i;
   Modernizr.addTest('proxybrowser', regex.test( navigator.userAgent ));
 
+
+  // List of property values to set for css tests. See ticket #21
+  var prefixes = (ModernizrProto._config.usePrefixes ? ' -webkit- -moz- -o- -ms- '.split(' ') : []);
+
+  // expose these for the plugin API. Look in the source for how to join() them against your input
+  ModernizrProto._prefixes = prefixes;
+
+  
+
+  /**
+   * atRule returns a given CSS property at-rule (eg @keyframes), possibly in
+   * some prefixed form, or false, in the case of an unsupported rule
+   *
+   * @param prop - String naming the property to test
+   */
+
+  var atRule = function(prop) {
+    var length = prefixes.length;
+    var cssrule = window.CSSRule;
+    var rule;
+
+    if (typeof cssrule === 'undefined') {
+      return false;
+    }
+
+    // remove literal @ from begining of provided property
+    prop = prop.replace(/^@/,'');
+
+    // CSSRules use underscores instead of dashes
+    rule = prop.replace(/-/g,'_').toUpperCase() + '_RULE';
+
+    if (rule in cssrule) {
+      return '@' + prop;
+    }
+
+    for ( var i = 0; i < length; i++ ) {
+      // prefixes gives us something like -o-, and we want O_
+      var prefix = prefixes[i];
+      var thisRule = prefix.toUpperCase() + '_' + rule;
+
+      if (thisRule in cssrule) {
+        return '@-' + prefix.toLowerCase() + '-' + prop;
+      }
+    }
+
+    return false;
+  };
+
+  
+
+  // Modernizr.prefixed() returns the prefixed or nonprefixed property name variant of your input
+  // Modernizr.prefixed('boxSizing') // 'MozBoxSizing'
+
+  // Properties can be passed as DOM-style camelCase or CSS-style kebab-case.
+  // Return values will always be in camelCase; if you want kebab-case, use Modernizr.prefixedCSS().
+
+  // If you're trying to ascertain which transition end event to bind to, you might do something like...
+  //
+  //     var transEndEventNames = {
+  //         'WebkitTransition' : 'webkitTransitionEnd',// Saf 6, Android Browser
+  //         'MozTransition'    : 'transitionend',      // only for FF < 15
+  //         'transition'       : 'transitionend'       // IE10, Opera, Chrome, FF 15+, Saf 7+
+  //     },
+  //     transEndEventName = transEndEventNames[ Modernizr.prefixed('transition') ];
+
+  var prefixed = ModernizrProto.prefixed = function( prop, obj, elem ) {
+    if (prop.indexOf('@') === 0) {
+      return atRule(prop);
+    }
+
+    if (prop.indexOf('-') != -1) {
+      // Convert kebab-case to camelCase
+      prop = cssToDOM(prop);
+    }
+    if (!obj) {
+      return testPropsAll(prop, 'pfx');
+    } else {
+      // Testing DOM property e.g. Modernizr.prefixed('requestAnimationFrame', window) // 'mozRequestAnimationFrame'
+      return testPropsAll(prop, obj, elem);
+    }
+  };
+
+  
 /*!
-  {
-  "name": "Flash",
-  "property": "flash",
-  "tags": ["flash"],
-  "polyfills": ["shumway"]
+{
+  "name": "Transition end event",
+  "authors": ["Ivan Nikolić"],
+  "notes": [{
+    "name": "Modernizr Methods documentation",
+    "href": "http://modernizr.com/docs/#s25"
+   }],
+  "tags": ["transition"]
+}
+!*/
+
+  Modernizr.prefixedEvent = Modernizr.prefixedEvent || {};
+  var transitionEndEventNames = {
+    'WebkitTransition' : 'webkitTransitionEnd',// Saf 6, Android Browser
+    'MozTransition'    : 'transitionend',      // only for FF < 15
+    'transition'       : 'transitionend'       // IE10, Opera, Chrome, FF 15+, Saf 7+
+  };
+  Modernizr.prefixedEvent.transitionend = transitionEndEventNames[prefixed('transition')];
+
+/*!
+{
+  "name": "Animation start event",
+  "authors": ["Ivan Nikolić"],
+  "notes": [{
+    "name": "Modernizr Methods documentation",
+    "href": "http://modernizr.com/docs/#s25"
+   },
+   {
+    "name": "Animation prefixes #1",
+    "href": "https://gist.github.com/adamjmcintyre/3098766"
+   },
+   {
+    "name": "Animation prefixes #2",
+    "href": "https://gist.github.com/Calvein/2025652"
+   }],
+  "tags": ["animation"]
+}
+!*/
+
+  Modernizr.prefixedEvent = Modernizr.prefixedEvent || {};
+  var animationStartEventNames = {
+    'WebkitAnimation' : 'webkitAnimationStart',
+    'msAnimation'     : 'MSAnimationStart',
+    'oAnimation'      : 'oAnimationStart',
+    'MozAnimation'    : 'animationstart',
+    'animation'       : 'animationstart'
+  };
+  Modernizr.prefixedEvent.animationstart = animationStartEventNames[prefixed('animation')];
+
+/*!
+{
+  "name": "Animation end event",
+  "authors": ["Ivan Nikolić"],
+  "notes": [{
+    "name": "Modernizr Methods documentation",
+    "href": "http://modernizr.com/docs/#s25"
+   },
+   {
+    "name": "Animation prefixes #1",
+    "href": "https://gist.github.com/adamjmcintyre/3098766"
+   },
+   {
+    "name": "Animation prefixes #2",
+    "href": "https://gist.github.com/Calvein/2025652"
+   }],
+  "tags": ["animation"]
+}
+!*/
+
+  Modernizr.prefixedEvent = Modernizr.prefixedEvent || {};
+  var animationEndEventNames = {
+    'WebkitAnimation' : 'webkitAnimationEnd',
+    'msAnimation'     : 'MSAnimationEnd',
+    'oAnimation'      : 'oAnimationEnd',
+    'MozAnimation'    : 'animationend',
+    'animation'       : 'animationend'
+  };
+  Modernizr.prefixedEvent.animationend = animationEndEventNames[prefixed('animation')];
+
+/*!
+{
+  "name": "Web Animation API",
+  "property": "animation",
+  "tags": ["webanimations"],
+  "polyfills": ["webanimationsjs"],
+  "notes": {
+    "name": "Introducing Web Animations",
+    "href": "http://brian.sol1.net/svg/2013/06/26/introducing-web-animations/"
   }
-  !*/
+}
+!*/
 /* DOC
-Detects support flash, as well as flash blocking plugins
+Detects support for the Web Animation API, a way to create css animations in js
 */
 
-  Modernizr.addAsyncTest(function() {
-    /* jshint -W053 */
-    var runTest = function(result, embed) {
-      var bool = !!result;
-      if (bool) {
-        bool = new Boolean(bool);
-        bool.blocked = (result === 'blocked');
-      }
-      addTest('flash', function() { return bool; });
-      if (embed) {
-        body.removeChild(embed);
-      }
-    };
-    var easy_detect;
-    var activex;
-    // we wrap activex in a try/catch becuase when flash is disabled through
-    // ActiveX controls, it throws an error.
-    try {
-      // Pan is an API that exists for flash objects.
-      activex = 'ActiveXObject' in window && 'Pan' in new window.ActiveXObject('ShockwaveFlash.ShockwaveFlash');
-    } catch(e) {}
-
-    easy_detect = !( ( 'plugins' in navigator && 'Shockwave Flash' in navigator.plugins ) || activex );
-
-    if (easy_detect) {
-      runTest(false);
-    }
-    else {
-      // flash seems to be installed, but it might be blocked. We have to
-      // actually create an element to see what happens to it.
-      var embed = createElement('embed');
-      var body = getBody();
-      var inline_style;
-
-      embed.type = 'application/x-shockwave-flash';
-
-      // Need to do this in the body (fake or otherwise) otherwise IE8 complains
-      body.appendChild(embed);
-
-      // Pan doesn't exist in the embed if its IE (its on the ActiveXObjeect)
-      // so this check is for all other browsers.
-      if (!('Pan' in embed) && !activex) {
-        runTest('blocked', embed);
-        return;
-      }
-
-      // If we have got this far, there is still a chance a userland plugin
-      // is blocking us (either changing the styles, or automatically removing
-      // the element). Both of these require us to take a step back for a moment
-      // to allow for them to get time of the thread, hence a setTimeout.
-      setTimeout(function() {
-        if (!docElement.contains(embed)) {
-          runTest('blocked');
-        }
-        else {
-          inline_style = embed.style.cssText;
-          if (inline_style !== '') {
-            // the style of the element has changed automatically. This is a
-            // really poor heuristic, but for lower end flash blocks, it the
-            // only change they can make.
-            runTest('blocked', embed);
-          }
-          else {
-            runTest(true, embed);
-          }
-        }
-
-        // If we’re rockin’ a fake body, clean it up
-        if (body.fake) {
-          body.parentNode.removeChild(body);
-        }
-      }, 10);
-    }
-  });
+  Modernizr.addTest('webanimations', 'Animation' in window);
 
 
   // Run each test
