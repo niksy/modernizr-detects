@@ -1443,6 +1443,10 @@ Unfortunately, UA sniffing is only reliable solution for prxy browser detection.
   "notes": [{
     "name": "Modernizr Methods documentation",
     "href": "http://modernizr.com/docs/#s25"
+   },
+   {
+    "name": "Prefixes",
+    "href": "https://github.com/twbs/bootstrap/issues/2870#issue-3887306"
    }],
   "tags": ["transition"]
 }
@@ -1450,9 +1454,11 @@ Unfortunately, UA sniffing is only reliable solution for prxy browser detection.
 
   Modernizr.prefixedEvent = Modernizr.prefixedEvent || {};
   var transitionEndEventNames = {
-    'WebkitTransition' : 'webkitTransitionEnd',// Saf 6, Android Browser
-    'MozTransition'    : 'transitionend',      // only for FF < 15
-    'transition'       : 'transitionend'       // IE10, Opera, Chrome, FF 15+, Saf 7+
+    'WebkitTransition' : 'webkitTransitionEnd',
+    'msTransition'     : 'MSTransitionEnd',
+    'OTransition'      : 'oTransitionEnd',
+    'MozTransition'    : 'transitionend',
+    'transition'       : 'transitionend'
   };
   Modernizr.prefixedEvent.transitionend = transitionEndEventNames[prefixed('transition')];
 
@@ -1471,6 +1477,14 @@ Unfortunately, UA sniffing is only reliable solution for prxy browser detection.
    {
     "name": "Animation prefixes #2",
     "href": "https://gist.github.com/Calvein/2025652"
+   },
+   {
+    "name": "Animation prefixes #3",
+    "href": "http://stackoverflow.com/q/19321411/178058"
+   },
+   {
+    "name": "Prefixes",
+    "href": "https://github.com/Modernizr/Modernizr/blob/master/src/omPrefixes.js"
    }],
   "tags": ["animation"]
 }
@@ -1480,7 +1494,7 @@ Unfortunately, UA sniffing is only reliable solution for prxy browser detection.
   var animationStartEventNames = {
     'WebkitAnimation' : 'webkitAnimationStart',
     'msAnimation'     : 'MSAnimationStart',
-    'oAnimation'      : 'oAnimationStart',
+    'OAnimation'      : 'oAnimationStart',
     'MozAnimation'    : 'animationstart',
     'animation'       : 'animationstart'
   };
@@ -1501,6 +1515,14 @@ Unfortunately, UA sniffing is only reliable solution for prxy browser detection.
    {
     "name": "Animation prefixes #2",
     "href": "https://gist.github.com/Calvein/2025652"
+   },
+   {
+    "name": "Animation prefixes #3",
+    "href": "http://stackoverflow.com/q/19321411/178058"
+   },
+   {
+    "name": "Prefixes",
+    "href": "https://github.com/Modernizr/Modernizr/blob/master/src/omPrefixes.js"
    }],
   "tags": ["animation"]
 }
@@ -1510,7 +1532,7 @@ Unfortunately, UA sniffing is only reliable solution for prxy browser detection.
   var animationEndEventNames = {
     'WebkitAnimation' : 'webkitAnimationEnd',
     'msAnimation'     : 'MSAnimationEnd',
-    'oAnimation'      : 'oAnimationEnd',
+    'OAnimation'      : 'oAnimationEnd',
     'MozAnimation'    : 'animationend',
     'animation'       : 'animationend'
   };

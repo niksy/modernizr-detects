@@ -5,6 +5,10 @@
   "notes": [{
     "name": "Modernizr Methods documentation",
     "href": "http://modernizr.com/docs/#s25"
+   },
+   {
+    "name": "Prefixes",
+    "href": "https://github.com/twbs/bootstrap/issues/2870#issue-3887306"
    }],
   "tags": ["transition"]
 }
@@ -12,9 +16,11 @@
 define(['Modernizr','prefixed'], function( Modernizr, prefixed ) {
   Modernizr.prefixedEvent = Modernizr.prefixedEvent || {};
   var transitionEndEventNames = {
-    'WebkitTransition' : 'webkitTransitionEnd',// Saf 6, Android Browser
-    'MozTransition'    : 'transitionend',      // only for FF < 15
-    'transition'       : 'transitionend'       // IE10, Opera, Chrome, FF 15+, Saf 7+
+    'WebkitTransition' : 'webkitTransitionEnd',
+    'msTransition'     : 'MSTransitionEnd',
+    'OTransition'      : 'oTransitionEnd',
+    'MozTransition'    : 'transitionend',
+    'transition'       : 'transitionend'
   };
   Modernizr.prefixedEvent.transitionend = transitionEndEventNames[prefixed('transition')];
 });

@@ -13,6 +13,14 @@
    {
     "name": "Animation prefixes #2",
     "href": "https://gist.github.com/Calvein/2025652"
+   },
+   {
+    "name": "Animation prefixes #3",
+    "href": "http://stackoverflow.com/q/19321411/178058"
+   },
+   {
+    "name": "Prefixes",
+    "href": "https://github.com/Modernizr/Modernizr/blob/master/src/omPrefixes.js"
    }],
   "tags": ["animation"]
 }
@@ -22,7 +30,7 @@ define(['Modernizr','prefixed'], function( Modernizr, prefixed ) {
   var animationEndEventNames = {
     'WebkitAnimation' : 'webkitAnimationEnd',
     'msAnimation'     : 'MSAnimationEnd',
-    'oAnimation'      : 'oAnimationEnd',
+    'OAnimation'      : 'oAnimationEnd',
     'MozAnimation'    : 'animationend',
     'animation'       : 'animationend'
   };
