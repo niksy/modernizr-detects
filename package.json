@@ -1,6 +1,6 @@
 {
   "name": "modernizr-detects",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Feature detection not suitable for Modernizr, but within it’s API for easier usage.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
