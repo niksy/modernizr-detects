@@ -25,7 +25,7 @@ define(['Modernizr','prefixed'], function( Modernizr, prefixed ) {
   var eventValue = transitionEndEventNames[prefixed('transition')];
   // Falsy value on Android 4.1-4.3 default browser
   if ( /Android 4\.[123]/.test(navigator.userAgent) ) {
-    eventValue = 'webkitTransitionEnd';
+    eventValue = transitionEndEventNames['WebkitTransition'];
   }
   Modernizr.prefixedEvent.transitionend = eventValue;
 });
