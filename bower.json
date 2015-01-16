@@ -4,10 +4,12 @@
   "description": "Feature detection not suitable for Modernizr, but within it’s API for easier usage.",
   "homepage": "https://github.com/niksy/modernizr-detects",
   "keywords": [
-    "modernizr"
+    "modernizr",
+    "custom",
+    "detect"
   ],
   "authors": [
-    "Ivan Nikolić"
+    "Ivan Nikolić <niksy5@gmail.com> (http://ivannikolic.com/)"
   ],
   "license": "MIT",
   "ignore": [
@@ -19,9 +21,5 @@
     "src",
     "Gruntfile.js",
     "package.json"
-  ],
-  "dependencies": {
-  },
-  "devDependencies": {
-  }
+  ]
 }

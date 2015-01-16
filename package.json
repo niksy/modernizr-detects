@@ -2,17 +2,16 @@
   "name": "modernizr-detects",
   "version": "0.2.3",
   "description": "Feature detection not suitable for Modernizr, but within it’s API for easier usage.",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/niksy/modernizr-detects.git"
   },
   "keywords": [
-    "modernizr"
+    "modernizr",
+    "custom",
+    "detect"
   ],
-  "author": "Ivan Nikolić",
+  "author": "Ivan Nikolić <niksy5@gmail.com> (http://ivannikolic.com/)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/niksy/modernizr-detects/issues"
@@ -24,5 +23,8 @@
     "grunt-bump": "^0.0.13",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-modernizr": "git://github.com/Modernizr/grunt-modernizr.git#feature/modernizr-3.0"
+  },
+  "directories": {
+    "test": "test"
   }
 }
