@@ -22,5 +22,10 @@ define(['Modernizr','prefixed'], function( Modernizr, prefixed ) {
     'MozTransition'    : 'transitionend',
     'transition'       : 'transitionend'
   };
-  Modernizr.prefixedEvent.transitionend = transitionEndEventNames[prefixed('transition')];
+  var eventValue = transitionEndEventNames[prefixed('transition')];
+  // Falsy value on Android 4.1-4.3 default browser
+  if ( /Android 4\.[123]/.test(navigator.userAgent) ) {
+    eventValue = 'webkitTransitionEnd';
+  }
+  Modernizr.prefixedEvent.transitionend = eventValue;
 });
