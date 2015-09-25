@@ -1,6 +1,7 @@
 /*!
 {
   "name": "onInput event, with proper support",
+  "property": "oninputproper",
   "tags": ["oninput","event"],
   "authors": ["Ivan Nikolić"],
   "notes": [{

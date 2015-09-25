@@ -1,6 +1,7 @@
 /*!
 {
   "name": "Ad block",
+  "property": "adblock",
   "tags": ["adblock"],
   "authors": ["Ivan Nikolić"],
   "async": true

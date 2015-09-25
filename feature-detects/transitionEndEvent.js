@@ -1,6 +1,7 @@
 /*!
 {
   "name": "Transition end event",
+  "property": "transitionEndEvent",
   "authors": ["Ivan Nikolić"],
   "notes": [{
     "name": "Modernizr Methods documentation",

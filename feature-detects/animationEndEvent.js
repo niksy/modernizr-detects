@@ -1,6 +1,7 @@
 /*!
 {
   "name": "Animation end event",
+  "property": "animationEndEvent",
   "authors": ["Ivan Nikolić"],
   "notes": [{
     "name": "Modernizr Methods documentation",

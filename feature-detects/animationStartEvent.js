@@ -1,6 +1,7 @@
 /*!
 {
   "name": "Animation start event",
+  "property": "animationStartEvent",
   "authors": ["Ivan Nikolić"],
   "notes": [{
     "name": "Modernizr Methods documentation",

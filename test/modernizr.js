@@ -1087,6 +1087,7 @@
 /*!
 {
   "name": "Ad block",
+  "property": "adblock",
   "tags": ["adblock"],
   "authors": ["Ivan Nikolić"],
   "async": true
@@ -1439,6 +1440,7 @@ Unfortunately, UA sniffing is only reliable solution for prxy browser detection.
 /*!
 {
   "name": "Transition end event",
+  "property": "transitionEndEvent",
   "authors": ["Ivan Nikolić"],
   "notes": [{
     "name": "Modernizr Methods documentation",
@@ -1460,11 +1462,17 @@ Unfortunately, UA sniffing is only reliable solution for prxy browser detection.
     'MozTransition'    : 'transitionend',
     'transition'       : 'transitionend'
   };
-  Modernizr.prefixedEvent.transitionend = transitionEndEventNames[prefixed('transition')];
+  var eventValue = transitionEndEventNames[prefixed('transition')];
+  // Falsy value on Android 4.1-4.3 default browser
+  if ( /Android 4\.[123]/.test(navigator.userAgent) ) {
+    eventValue = transitionEndEventNames['WebkitTransition'];
+  }
+  Modernizr.prefixedEvent.transitionend = eventValue;
 
 /*!
 {
   "name": "Animation start event",
+  "property": "animationStartEvent",
   "authors": ["Ivan Nikolić"],
   "notes": [{
     "name": "Modernizr Methods documentation",
@@ -1503,6 +1511,7 @@ Unfortunately, UA sniffing is only reliable solution for prxy browser detection.
 /*!
 {
   "name": "Animation end event",
+  "property": "animationEndEvent",
   "authors": ["Ivan Nikolić"],
   "notes": [{
     "name": "Modernizr Methods documentation",
@@ -1555,6 +1564,127 @@ Detects support for the Web Animation API, a way to create css animations in js
 */
 
   Modernizr.addTest('webanimations', 'Animation' in window);
+
+
+  var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
+  
+
+  // isEventSupported determines if the given element supports the given event
+  // kangax.github.com/iseventsupported/
+  // github.com/Modernizr/Modernizr/pull/636
+  //
+  // Known incorrects:
+  //   Modernizr.hasEvent("webkitTransitionEnd", elem) // false negative
+  //   Modernizr.hasEvent("textInput") // in Webkit. github.com/Modernizr/Modernizr/issues/333
+  var isEventSupported = (function (undefined) {
+
+    // Detect whether event support can be detected via `in`. Test on a DOM element
+    // using the "blur" event b/c it should always exist. bit.ly/event-detection
+    var needsFallback = !('onblur' in document.documentElement);
+
+    /**
+     * @param  {string|*}           eventName  is the name of an event to test for (e.g. "resize")
+     * @param  {(Object|string|*)=} element    is the element|document|window|tagName to test on
+     * @return {boolean}
+     */
+    function isEventSupportedInner( eventName, element ) {
+
+      var isSupported;
+      if ( !eventName ) { return false; }
+      if ( !element || typeof element === 'string' ) {
+        element = createElement(element || 'div');
+      }
+
+      // Testing via the `in` operator is sufficient for modern browsers and IE.
+      // When using `setAttribute`, IE skips "unload", WebKit skips "unload" and
+      // "resize", whereas `in` "catches" those.
+      eventName = 'on' + eventName;
+      isSupported = eventName in element;
+
+      // Fallback technique for old Firefox - bit.ly/event-detection
+      if ( !isSupported && needsFallback ) {
+        if ( !element.setAttribute ) {
+          // Switch to generic element if it lacks `setAttribute`.
+          // It could be the `document`, `window`, or something else.
+          element = createElement('div');
+        }
+        if ( element.setAttribute && element.removeAttribute ) {
+          element.setAttribute(eventName, '');
+          isSupported = typeof element[eventName] === 'function';
+
+          if ( element[eventName] !== undefined ) {
+            // If property was created, "remove it" by setting value to `undefined`.
+            element[eventName] = undefined;
+          }
+          element.removeAttribute(eventName);
+        }
+      }
+
+      return isSupported;
+    }
+    return isEventSupportedInner;
+  })();
+
+  
+
+  // Modernizr.hasEvent() detects support for a given event, with an optional element to test on
+  // Modernizr.hasEvent('gesturestart', elem)
+  var hasEvent = ModernizrProto.hasEvent = isEventSupported;
+  
+/*!
+{
+  "name": "onInput Event",
+  "property": "oninput",
+  "notes": [{
+    "name": "MDN article",
+    "href": "https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers.oninput"
+  },{
+    "name": "WHATWG spec",
+    "href": "http://www.whatwg.org/specs/web-apps/current-work/multipage/common-input-element-attributes.html#common-event-behaviors"
+  },{
+    "name": "Detecting onInput support",
+    "href": "http://danielfriesen.name/blog/2010/02/16/html5-browser-maze-oninput-support"
+  }],
+  "authors": ["Patrick Kettner"],
+  "tags": ["event"]
+}
+!*/
+/* DOC
+`oninput` tests if the browser is able to detect the input event
+*/
+
+
+  Modernizr.addTest('oninput', function() {
+    var input = createElement('input');
+    input.setAttribute('oninput', 'return');
+
+    if (hasEvent('oninput', docElement) || typeof input.oninput == 'function') {
+      return true;
+    }
+
+    // IE doesn't support onInput, so we wrap up the non IE APIs
+    // (createEvent, addEventListener) in a try catch, rather than test for
+    // their trident equivalent.
+    try {
+      // Older Firefox didn't map oninput attribute to oninput property
+      var testEvent  = document.createEvent('KeyboardEvent');
+      var supportsOnInput = false;
+      var handler = function(e) {
+        supportsOnInput = true;
+        e.preventDefault();
+        e.stopPropagation();
+      };
+
+      testEvent.initKeyEvent('keypress', true, true, window, false, false, false, false, 0, 'e'.charCodeAt(0));
+      docElement.appendChild(input);
+      input.addEventListener('input', handler, false);
+      input.focus();
+      input.dispatchEvent(testEvent);
+      input.removeEventListener('input', handler, false);
+      docElement.removeChild(input);
+      return supportsOnInput;
+    } catch (e) {}
+  });
 
 
   // Run each test
