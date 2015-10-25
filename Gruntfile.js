@@ -58,7 +58,6 @@ module.exports = function ( grunt ) {
 				],
 				'customTests': [
 					'feature-detects/adblock.js',
-					'feature-detects/appearance.js',
 					'feature-detects/ie.js',
 					'feature-detects/print.js',
 					'feature-detects/proxybrowser.js',
