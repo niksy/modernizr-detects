@@ -71,10 +71,7 @@ module.exports = function ( grunt ) {
 
 	});
 
-	grunt.loadNpmTasks('grunt-contrib-jshint');
-	grunt.loadNpmTasks('grunt-bump');
-	grunt.loadNpmTasks('grunt-modernizr');
-	grunt.loadNpmTasks('grunt-autoprefixer');
+	require('load-grunt-tasks')(grunt);
 
 	grunt.registerTask('stylecheck', ['jshint:main']);
 	grunt.registerTask('default', ['stylecheck']);

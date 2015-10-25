@@ -22,7 +22,8 @@
     "grunt-autoprefixer": "^1.0.1",
     "grunt-bump": "^0.3.0",
     "grunt-contrib-jshint": "^0.10.0",
-    "grunt-modernizr": "Modernizr/grunt-modernizr#feature/modernizr-3.0"
+    "grunt-modernizr": "niksy/grunt-modernizr",
+    "load-grunt-tasks": "^3.3.0"
   },
   "scripts": {
     "test": "grunt test"
