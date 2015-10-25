@@ -39,14 +39,14 @@ module.exports = function ( grunt ) {
 				expand: true,
 				flatten: true,
 				src: 'test/assets/style/*.css',
-				dest: 'test/assets/style/'
+				dest: 'test/out/assets/style/'
 			}
 		},
 
 		modernizr: {
 			dist: {
 				uglify: false,
-				'dest': 'test/modernizr.js',
+				'dest': 'test/out/modernizr.js',
 				'options': [
 					'setClasses',
 					'addTest',
