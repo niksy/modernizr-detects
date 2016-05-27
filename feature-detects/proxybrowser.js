@@ -20,7 +20,7 @@ Unfortunately, UA sniffing is only reliable solution for prxy browser detection.
 
 */
 
-define(['Modernizr'], function( Modernizr ) {
-  var regex = /Opera Mini|Silk/i;
-  Modernizr.addTest('proxybrowser', regex.test( navigator.userAgent ));
+define(['Modernizr'], function ( Modernizr ) {
+	var regex = /Opera Mini|Silk/i;
+	Modernizr.addTest('proxybrowser', regex.test( navigator.userAgent ));
 });

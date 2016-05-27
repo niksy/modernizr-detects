@@ -17,12 +17,12 @@
 `oninput` test for proper support
 */
 
-define(['Modernizr', 'test/event/oninput'], function( Modernizr ) {
-  Modernizr.addTest('oninputproper', function() {
-    // If no `oninput` support or IE 9
-    if ( !Modernizr.oninput || (document.all && document.addEventListener && !window.atob) ) {
-      return false;
-    }
-    return true;
-  });
+define(['Modernizr', 'test/event/oninput'], function ( Modernizr ) {
+	Modernizr.addTest('oninputproper', function () {
+		// If no `oninput` support or IE 9
+		if ( !Modernizr.oninput || (document.all && document.addEventListener && !window.atob) ) {
+			return false;
+		}
+		return true;
+	});
 });

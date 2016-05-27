@@ -26,14 +26,23 @@
   "tags": ["animation"]
 }
 !*/
-define(['Modernizr','prefixed'], function( Modernizr, prefixed ) {
-  Modernizr.prefixedEvent = Modernizr.prefixedEvent || {};
-  var animationStartEventNames = {
-    'WebkitAnimation' : 'webkitAnimationStart',
-    'msAnimation'     : 'MSAnimationStart',
-    'OAnimation'      : 'oAnimationStart',
-    'MozAnimation'    : 'animationstart',
-    'animation'       : 'animationstart'
-  };
-  Modernizr.prefixedEvent.animationstart = animationStartEventNames[prefixed('animation')];
+define(['Modernizr', 'prefixed'], function ( Modernizr, prefixed ) {
+	/* eslint-disable quote-props, no-param-reassign */
+
+	var animationStartEventNames = {
+		'WebkitAnimation': 'webkitAnimationStart',
+		'msAnimation': 'MSAnimationStart',
+		'OAnimation': 'oAnimationStart',
+		'MozAnimation': 'animationstart',
+		'animation': 'animationstart'
+	};
+	var eventValue = animationStartEventNames[prefixed('animation')];
+
+	if ( typeof eventValue === 'undefined' ) {
+		eventValue = 'modernizrNoAnimationStartEvent';
+	}
+
+	Modernizr.prefixedEvent = Modernizr.prefixedEvent || {};
+	Modernizr.prefixedEvent.animationstart = eventValue;
+
 });

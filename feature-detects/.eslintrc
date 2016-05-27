@@ -1,0 +1,8 @@
+{
+	"env": {
+		"amd": true
+	},
+	"rules": {
+		"spaced-comment": 0
+	}
+}
