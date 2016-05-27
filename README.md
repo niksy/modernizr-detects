@@ -33,6 +33,32 @@ customizr({
 });
 ```
 
+## List of feature detections
+
+### adblock
+
+Detects presence of ad blockers such as AdBlock Plus.
+
+### ie
+
+Gives you information regarding current IE version (if browser is IE).
+
+### oninputproper
+
+`oninput` event which detects [falsy values](https://developer.mozilla.org/en-US/docs/Web/Events/input#Browser_compatibility).
+
+### print
+
+Detects if current device has printing capability.
+
+### proxybrowser
+
+Detects if current browser is proxy browser.
+
+### animationstart, animationend, transitionend
+
+Not detection per se, but gives you prefixed/unprefixed string for animation/transition event according to browser capabilities.
+
 ## License
 
 MIT © [Ivan Nikolić](http://ivannikolic.com)
