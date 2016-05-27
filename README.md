@@ -1,6 +1,6 @@
 # modernizr-detects
 
-[![Build Status][ci-img]][ci]
+[![Build Status][ci-img]][ci] [![Browserstack][browserstack-img]][browserstack]
 
 Feature detection not suitable for [Modernizr][modernizr], but within it’s API for easier usage.
 
@@ -44,3 +44,5 @@ MIT © [Ivan Nikolić](http://ivannikolic.com)
 [customizr-fork-grunt]: https://github.com/niksy/grunt-modernizr
 [ci]: https://travis-ci.org/niksy/modernizr-detects
 [ci-img]: https://img.shields.io/travis/niksy/modernizr-detects/master.svg
+[browserstack]: https://www.browserstack.com/
+[browserstack-img]: https://cdn.rawgit.com/niksy/c73069b66d20e2e0005dc8479c125fbd/raw/f644159e3f5f07291f98f59a44146735e9962e0d/browserstack.svg
