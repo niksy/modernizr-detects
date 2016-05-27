@@ -2,30 +2,35 @@
   "name": "modernizr-detects",
   "version": "0.3.1",
   "description": "Feature detection not suitable for Modernizr, but within it’s API for easier usage.",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/niksy/modernizr-detects.git"
-  },
-  "keywords": [
-    "modernizr",
-    "custom",
-    "detect"
-  ],
+  "main": "index.js",
   "author": "Ivan Nikolić <niksy5@gmail.com> (http://ivannikolic.com/)",
   "license": "MIT",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "eslint {feature-detects/*,test/*}.js && mocha test/index.js"
+  },
+  "devDependencies": {
+    "eslint": "^2.9.0",
+    "eslint-config-niksy": "^2.0.0",
+    "eslint-plugin-promise": "^1.1.0",
+    "mocha": "^2.4.5"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "keywords": [
+    "custom",
+    "detect",
+    "modernizr"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niksy/modernizr-detects.git"
+  },
   "bugs": {
     "url": "https://github.com/niksy/modernizr-detects/issues"
   },
-  "homepage": "https://github.com/niksy/modernizr-detects",
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-autoprefixer": "^1.0.1",
-    "grunt-bump": "^0.3.0",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-modernizr": "niksy/grunt-modernizr",
-    "load-grunt-tasks": "^3.3.0"
-  },
-  "scripts": {
-    "test": "grunt test"
-  }
+  "homepage": "https://github.com/niksy/modernizr-detects#readme"
 }
