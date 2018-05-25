@@ -77,7 +77,7 @@ define(['Modernizr', 'createElement', 'addTest'], function ( Modernizr, createEl
 				}
 				detectionTimerCount = detectionTimerCount + 1;
 				detectAdBlocker();
-			}, 600);
+			}, 100);
 
 		}
 
