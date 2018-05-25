@@ -15,7 +15,7 @@ define(['Modernizr', 'createElement', 'addTest'], function ( Modernizr, createEl
 
 		var adBlockActive = false;
 		var detectionTimerCount = 0;
-		var numberOfChecks = 5;
+		var numberOfChecks = 3;
 		var container = document.body;
 		var el, detectionTimer, bodyReadyTimer;
 
@@ -25,17 +25,11 @@ define(['Modernizr', 'createElement', 'addTest'], function ( Modernizr, createEl
 
 		function detectAdBlocker () {
 
-			var computedStyle;
-
-			if ( typeof window.getComputedStyle !== 'undefined' ) {
-				computedStyle = window.getComputedStyle(el, null);
-			}
-
 			try {
 				adBlockActive = (
 					container.getAttribute('abp') !== null ||
-					(computedStyle ? computedStyle.getPropertyValue('display') : el.style.display) === 'none' ||
-					(computedStyle ? computedStyle.getPropertyValue('visibility') : el.style.visibility) === 'hidden' ||
+					el.style.display === 'none' ||
+					el.style.visibility === 'hidden' ||
 					el.offsetParent === null ||
 					el.offsetHeight === 0 ||
 					el.offsetLeft === 0 ||
@@ -83,7 +77,7 @@ define(['Modernizr', 'createElement', 'addTest'], function ( Modernizr, createEl
 				}
 				detectionTimerCount = detectionTimerCount + 1;
 				detectAdBlocker();
-			}, 100);
+			}, 600);
 
 		}
 
