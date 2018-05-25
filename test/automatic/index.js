@@ -18,12 +18,11 @@ describe('Basic', function () {
 	});
 
 	it('adblock', function ( done ) {
-		// We need to wait since this is async test
-		setTimeout(function () {
-			assert.equal(Modernizr.adblock, false);
+		Modernizr.on('adblock', function ( result ) {
+			assert.equal(result, false);
 			assert.equal(html.classList.contains('no-adblock'), true);
 			done();
-		}, 200);
+		});
 	});
 
 	it('ie', function () {
