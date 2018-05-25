@@ -19,35 +19,43 @@ var customizr = require('customizr');
 
 var args = minimist(process.argv.slice(2));
 
-gulp.task('test:modernizr-build', ['test:cleanup'], function ( done ) {
-	customizr({
-		dest: './test-dist/modernizr.js',
-		crawl: false,
-		uglify: false,
-		options: [
-			'setClasses',
-			'addTest',
-			'html5printshiv',
-			'testProp'
-		],
-		excludeTests: [
-			'contains'
-		],
-		customTests: [
-			'adblock',
-			'ie',
-			'oninputproper',
-			'print',
-			'proxybrowser',
-			'transitionEndEvent',
-			'animationStartEvent',
-			'animationEndEvent'
-		].map(function ( feature ) {
-			return require.resolve('./feature-detects/' + feature);
-		})
-	}, function () {
-		done();
-	});
+gulp.task('test:modernizr-build', ['test:cleanup'], function () {
+	function bundle () {
+		return new Promise(function ( resolve ) {
+			customizr({
+				dest: './test-dist/modernizr.js',
+				crawl: false,
+				uglify: false,
+				options: [
+					'setClasses',
+					'addTest',
+					'html5printshiv',
+					'testProp'
+				],
+				excludeTests: [
+					'contains'
+				],
+				customTests: [
+					'adblock',
+					'ie',
+					'oninputproper',
+					'print',
+					'proxybrowser',
+					'transitionEndEvent',
+					'animationStartEvent',
+					'animationEndEvent'
+				].map(function ( feature ) {
+					return require.resolve('./feature-detects/' + feature);
+				})
+			}, function () {
+				resolve();
+			});
+		});
+	}
+	if ( args.watch ) {
+		gulp.watch(['./feature-detects/**/*.js'], bundle);
+	}
+	return bundle();
 });
 
 gulp.task('test:cleanup', function () {
