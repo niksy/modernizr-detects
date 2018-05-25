@@ -74,20 +74,13 @@ module.exports = function(config) {
         browser_version: '44',
         os: 'Windows',
         os_version: '7'
-      },
-      'BS-IE8': {
-      	base: 'BrowserStack',
-      	browser: 'ie',
-      	browser_version: '8',
-      	os: 'Windows',
-      	os_version: 'XP'
       }
     },
 
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['BS-Chrome', 'BS-Firefox', 'BS-IE8'],
+    browsers: ['BS-Chrome', 'BS-Firefox'],
 
 
     // Continuous Integration mode
