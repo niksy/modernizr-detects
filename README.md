@@ -1,6 +1,6 @@
 # modernizr-detects
 
-[![Build Status][ci-img]][ci] [![Browserstack][browserstack-img]][browserstack]
+[![Build Status][ci-img]][ci] [![BrowserStack Status][browserstack-img]][browserstack]
 
 Feature detection not suitable for [Modernizr][modernizr], but within it’s API for easier usage.
 
@@ -59,6 +59,16 @@ Detects if current browser is proxy browser.
 
 Not detection per se, but gives you prefixed/unprefixed string for animation/transition event according to browser capabilities.
 
+## Browser support
+
+Tested in IE9+ and all modern browsers.
+
+## Test
+
+For local automated tests, run `npm run test:automated:local` (append `:watch` for watcher support).
+
+For manual tests, run `npm run test:manual:local` and open <http://localhost:9000/> in your browser.
+
 ## License
 
 MIT © [Ivan Nikolić](http://ivannikolic.com)
@@ -69,6 +79,6 @@ MIT © [Ivan Nikolić](http://ivannikolic.com)
 [customizr-fork-gulp]: https://github.com/niksy/gulp-modernizr
 [customizr-fork-grunt]: https://github.com/niksy/grunt-modernizr
 [ci]: https://travis-ci.org/niksy/modernizr-detects
-[ci-img]: https://img.shields.io/travis/niksy/modernizr-detects/master.svg
+[ci-img]: https://travis-ci.org/niksy/modernizr-detects.svg?branch=master
 [browserstack]: https://www.browserstack.com/
-[browserstack-img]: https://cdn.rawgit.com/niksy/c73069b66d20e2e0005dc8479c125fbd/raw/f644159e3f5f07291f98f59a44146735e9962e0d/browserstack.svg
+[browserstack-img]: https://www.browserstack.com/automate/badge.svg?badge_key=NVhJRVhOMzBSZXRCSDNxSUF1ZW55cnJGQ0xyZTNJcDFQSGUyZnl4MG5KWT0tLUN1blZwQXFpak52dEhWQjY4dmlpQlE9PQ==--c4141f7b0cbc97b29063b1c65b1a8e1b6b3833d9

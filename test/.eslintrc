@@ -1,8 +1,6 @@
 {
 	"extends": [
-		"niksy"
-	],
-	"env": {
-		"mocha": true
-	}
+		"niksy",
+		"niksy/tests"
+	]
 }

@@ -1,27 +1,39 @@
-var path = require('path');
-var gulp = require('gulp');
-var sourcemaps = require('gulp-sourcemaps');
-var plumber = require('gulp-plumber');
-var gutil = require('gulp-util');
-var debug = require('gulp-debug');
-var nunjucks = require('gulp-nunjucks-render');
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
-var browserify = require('browserify');
-var watchify = require('watchify');
-var del = require('del');
-var ws = require('local-web-server');
-var opn = require('opn');
-var minimist = require('minimist');
-var globby = require('globby');
-var es = require('event-stream');
-var customizr = require('customizr');
+'use strict';
 
-var args = minimist(process.argv.slice(2));
+const path = require('path');
+const gulp = require('gulp');
+const sourcemaps = require('gulp-sourcemaps');
+const plumber = require('gulp-plumber');
+const gutil = require('gulp-util');
+const debug = require('gulp-debug');
+const nunjucks = require('gulp-nunjucks-render');
+const webpack = require('webpack');
+const del = require('del');
+const ws = require('local-web-server');
+const opn = require('opn');
+const minimist = require('minimist');
+const globby = require('globby');
+const postcss = require('gulp-postcss');
+const atImport = require('postcss-import');
+const customizr = require('customizr');
 
-gulp.task('test:modernizr-build', ['test:cleanup'], function () {
+const args = minimist(process.argv.slice(2), {
+	'default': {
+		watch: false,
+		port: 9000
+	}
+});
+const watch = args.watch;
+const port = args.port;
+
+function handleError ( msg ) {
+	gutil.log(gutil.colors.red(msg.message));
+	this.emit('end');
+}
+
+gulp.task('test:modernizr-build', ['test:cleanup'], () => {
 	function bundle () {
-		return new Promise(function ( resolve ) {
+		return new Promise(( resolve ) => {
 			customizr({
 				dest: './test-dist/modernizr.js',
 				crawl: false,
@@ -44,10 +56,8 @@ gulp.task('test:modernizr-build', ['test:cleanup'], function () {
 					'transitionEndEvent',
 					'animationStartEvent',
 					'animationEndEvent'
-				].map(function ( feature ) {
-					return require.resolve('./feature-detects/' + feature);
-				})
-			}, function () {
+				].map(( feature ) => require.resolve(`./feature-detects/${feature}`))
+			}, () => {
 				resolve();
 			});
 		});
@@ -58,104 +68,128 @@ gulp.task('test:modernizr-build', ['test:cleanup'], function () {
 	return bundle();
 });
 
-gulp.task('test:cleanup', function () {
+gulp.task('test:cleanup', () => {
 	return del([
 		'./test-dist'
 	]);
 });
 
-gulp.task('test:markup', ['test:cleanup'], function () {
+gulp.task('test:markup', ['test:cleanup'], () => {
 	function bundle () {
-		return gulp.src('./test/manual/suite/**/*.html')
-				.pipe(nunjucks())
-				.pipe(gulp.dest('./test-dist'))
-				.pipe(debug({ title: 'Markup:' }));
+		return gulp.src('./test/manual/**/*.html')
+			.pipe(plumber(handleError))
+			.pipe(nunjucks())
+			.pipe(plumber.stop())
+			.pipe(gulp.dest('./test-dist'))
+			.pipe(debug({ title: 'Markup:' }));
 	}
-	if ( args.watch ) {
-		gulp.watch(['./test/manual/suite/**/*.html'], bundle);
+	if ( watch ) {
+		gulp.watch(['./test/manual/**/*.html'], bundle);
 	}
 	return bundle();
 });
 
-gulp.task('test:style', ['test:cleanup'], function () {
+gulp.task('test:style', ['test:cleanup'], () => {
 	function bundle () {
-		return gulp.src('./test/manual/assets/**/*.css')
-				.pipe(gulp.dest('./test-dist/assets'))
-				.pipe(debug({ title: 'Style:' }));
+		return gulp.src('./test/manual/**/*.css')
+			.pipe(plumber(handleError))
+			.pipe(sourcemaps.init({
+				loadMaps: true
+			}))
+			.pipe(postcss([
+				atImport()
+			]))
+			// Tasks
+			.pipe(sourcemaps.write())
+			.pipe(plumber.stop())
+			.pipe(gulp.dest('./test-dist'))
+			.pipe(debug({ title: 'Style:' }));
 	}
-	if ( args.watch ) {
-		gulp.watch(['./test/manual/assets/**/*.css'], bundle);
+	if ( watch ) {
+		gulp.watch(['./test/manual/**/*.css'], bundle);
 	}
 	return bundle();
 });
 
-gulp.task('test:script', ['test:cleanup'], function ( done ) {
+gulp.task('test:script', ['test:cleanup'], () => {
 
-	globby(['./test/manual/suite/**/*.js'])
-	.then(function ( files ) {
+	return globby(['./test/manual/**/*.js'])
+		.then(( files ) => {
+			return files
+				.map(( file ) => {
+					const extname = path.extname(file);
+					const key = path.basename(file, extname);
+					const obj = {};
+					obj[`${file.replace('./test/manual/', '').replace(path.basename(file), '')}${key}`] = file;
+					return obj;
+				})
+				.reduce(( prev, next ) => {
+					return Object.assign(prev, next);
+				}, {});
+		})
+		.then(( entries ) => {
 
-		function handleError ( msg ) {
-			gutil.log(gutil.colors.red(msg.message));
-			this.emit('end');
-		}
-
-		function task ( file ) {
-
-			var b = browserify({
-				entries: [file],
-				debug: true,
-				cache: {},
-				packageCache: {}
+			const compiler = webpack({
+				entry: entries,
+				output: {
+					filename: '[name].js',
+					path: path.resolve(__dirname, './test-dist')
+				},
+				mode: 'none',
+				devtool: 'cheap-module-inline-source-map',
+				module: {
+					rules: [
+						{
+							test: /\.js$/,
+							exclude: /node_modules/,
+							use: [{
+								loader: 'babel-loader'
+							}]
+						}
+					]
+				}
 			});
-			if ( args.watch ) {
-				b.plugin(watchify);
-			}
 
-			function bundle () {
-				return b.bundle()
-					.on('error', handleError)
-					.pipe(plumber(handleError))
-					.pipe(source(path.basename(file)))
-					.pipe(buffer())
-					.pipe(sourcemaps.init({
-						loadMaps: true
-					}))
-					.pipe(sourcemaps.write())
-					.pipe(plumber.stop())
-					.pipe(gulp.dest(path.join('./test-dist', path.dirname(file).split(path.sep).pop())));
-			}
+			return new Promise(( resolve, reject ) => {
 
-			if ( args.watch ) {
-				b.on('update', function () {
-					bundle()
-						.pipe(debug({ title: 'Script:' }));
-				});
-				b.on('log', gutil.log);
-			}
+				function cb ( err, stats ) {
+					if ( err ) {
+						return reject(err);
+					}
+					gutil.log(stats.toString({
+						colors: true
+					}));
+					return resolve();
+				}
 
-			return bundle();
+				if ( watch ) {
+					compiler.watch({}, cb);
+				} else {
+					compiler.run(cb);
+				}
 
-		}
+			});
 
-		if ( files.length ) {
-			es.merge(files.map(task))
-				.pipe(debug({ title: 'Script:' }))
-				.on('data', function () {})
-				.on('end', done);
-		} else {
-			done();
-		}
-
-	})
-	.catch(function ( err ) {
-		done(err);
-	});
+		});
 
 });
 
-gulp.task('test', ['test:cleanup', 'test:modernizr-build', 'test:markup', 'test:style', 'test:script'], function () {
-	var port = 8000;
-	if ( args.watch ) {
+gulp.task('test:assets', ['test:cleanup'], () => {
+	function bundle () {
+		return gulp.src('./test/manual/assets/**/*')
+			.pipe(gulp.dest('./test-dist/assets'))
+			.pipe(debug({ title: 'Assets:' }));
+	}
+	if ( watch ) {
+		gulp.watch(['./test/manual/assets/**/*'], bundle);
+	}
+	return bundle();
+});
+
+gulp.task('test:prepare', ['test:cleanup', 'test:modernizr-build', 'test:markup', 'test:style', 'test:script', 'test:assets']);
+
+gulp.task('test:local:manual', ['test:prepare'], () => {
+	if ( watch ) {
 		ws({
 			'static': {
 				root: './test-dist'
@@ -164,6 +198,6 @@ gulp.task('test', ['test:cleanup', 'test:modernizr-build', 'test:markup', 'test:
 				path: './test-dist'
 			}
 		}).listen(port);
-		opn('http://0.0.0.0:' + port);
+		opn(`http://localhost:${port}`);
 	}
 });

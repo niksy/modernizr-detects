@@ -1,0 +1,8 @@
+{
+	"presets": [
+		"niksy"
+	],
+	"plugins": [
+		"transform-object-assign"
+	]
+}

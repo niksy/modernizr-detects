@@ -1,31 +1,32 @@
 /* globals Modernizr:false */
 
-var assert = require('assert');
-var bowser = require('bowser');
+const assert = require('assert');
+const bowser = require('bowser');
+
 require('classlist.js');
 
 describe('Basic', function () {
 
-	var html = document.getElementsByTagName('html')[0];
+	const html = document.getElementsByTagName('html')[0];
 
 	before(function () {
-		var fixture = window.__html__['test/automatic/fixtures/index.html'];
-		document.body.insertAdjacentHTML('beforeend', '<div id="fixture">' + fixture + '</div>');
+		const fixture = window.__html__['test/automated/fixtures/index.html'];
+		document.body.insertAdjacentHTML('beforeend', `<div id="fixture">${fixture}</div>`);
 	});
 
 	after(function () {
 		document.body.removeChild(document.getElementById('fixture'));
 	});
 
-	it('adblock', function ( done ) {
-		Modernizr.on('adblock', function ( result ) {
+	it('should test feature "adblock"', function ( done ) {
+		Modernizr.on('adblock', ( result ) => {
 			assert.equal(result, false);
 			assert.equal(html.classList.contains('no-adblock'), true);
 			done();
 		});
 	});
 
-	it('ie', function () {
+	it('should test feature "ie"', function () {
 		if ( bowser.msie && bowser.version === 9 ) {
 			assert.equal(Modernizr.ie, true);
 			assert.equal(Modernizr.ie.version, 8);
@@ -36,7 +37,7 @@ describe('Basic', function () {
 		}
 	});
 
-	it('oninputproper', function () {
+	it('should test feature "oninputproper"', function () {
 		if ( bowser.msie && bowser.version <= 9 ) {
 			assert.equal(Modernizr.oninputproper, false);
 			assert.equal(html.classList.contains('no-oninputproper'), true);
@@ -46,7 +47,7 @@ describe('Basic', function () {
 		}
 	});
 
-	it('print', function () {
+	it('should test feature "print"', function () {
 		if ( bowser.ios ) {
 			assert.equal(Modernizr.print, false);
 			assert.equal(html.classList.contains('no-print'), true);
@@ -56,7 +57,7 @@ describe('Basic', function () {
 		}
 	});
 
-	it('proxybrowser', function () {
+	it('should test feature "proxybrowser"', function () {
 		if ( /Opera Mini/i.test(navigator.userAgent) ) {
 			assert.equal(Modernizr.proxybrowser, true);
 			assert.equal(html.classList.contains('proxybrowser'), true);
@@ -70,9 +71,9 @@ describe('Basic', function () {
 
 describe('CSS events', function () {
 
-	it('transitionEndEvent', function () {
+	it('should test event "transitionEndEvent"', function () {
 
-		var e = Modernizr.prefixedEvent.transitionend;
+		const e = Modernizr.prefixedEvent.transitionend;
 
 		if ( bowser.chrome && bowser.version <= 25 ) {
 			assert.equal(e, 'webkitTransitionEnd');
@@ -83,9 +84,9 @@ describe('CSS events', function () {
 		}
 	});
 
-	it('animationStartEvent', function () {
+	it('should test event "animationStartEvent"', function () {
 
-		var e = Modernizr.prefixedEvent.animationstart;
+		const e = Modernizr.prefixedEvent.animationstart;
 
 		if ( bowser.chrome && bowser.version <= 40 ) {
 			assert.equal(e, 'webkitAnimationStart');
@@ -96,9 +97,9 @@ describe('CSS events', function () {
 		}
 	});
 
-	it('animationEndEvent', function () {
+	it('should test event "animationEndEvent"', function () {
 
-		var e = Modernizr.prefixedEvent.animationend;
+		const e = Modernizr.prefixedEvent.animationend;
 
 		if ( bowser.chrome && bowser.version <= 40 ) {
 			assert.equal(e, 'webkitAnimationEnd');

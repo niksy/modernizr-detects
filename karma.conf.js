@@ -1,101 +1,90 @@
-// Karma configuration
-// Generated on Fri May 27 2016 09:44:10 GMT+0200 (CEST)
+'use strict';
 
-module.exports = function(config) {
-  config.set({
+module.exports = function ( config ) {
 
-    // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+	config.set({
+		basePath: '',
+		frameworks: ['mocha'],
+		files: [
+			'test-dist/modernizr.js',
+			'test/automated/**/*.html',
+			'test/automated/**/.webpack.js'
+		],
+		exclude: [],
+		preprocessors: {
+			'test/automated/**/*.html': ['html2js'],
+			'test/automated/**/.webpack.js': ['webpack', 'sourcemap']
+		},
+		reporters: ['mocha'],
+		port: 9001,
+		colors: true,
+		logLevel: config.LOG_INFO,
+		autoWatch: false,
+		browserStack: {
+			startTunnel: true,
+			project: 'modernizr-detects',
+			name: 'Automated (Karma)',
+			build: 'Automated (Karma)'
+		},
+		client: {
+			captureConsole: true,
+			mocha: {
+				ui: 'bdd'
+			}
+		},
+		browserConsoleLogOptions: {
+			level: 'log',
+			format: '%b %T: %m',
+			terminal: true
+		},
+		webpack: {
+			mode: 'none',
+			devtool: 'cheap-module-inline-source-map',
+			module: {
+				rules: [
+					{
+						test: /\.js$/,
+						exclude: /node_modules/,
+						use: [{
+							loader: 'babel-loader'
+						}]
+					}
+				]
+			}
+		},
+		customLaunchers: {
+			'BS-Chrome': {
+				base: 'BrowserStack',
+				browser: 'Chrome',
+				os: 'Windows',
+				'os_version': '7',
+				project: 'modernizr-detects',
+				build: 'Automated (Karma)',
+				name: 'Chrome'
+			},
+			'BS-Firefox': {
+				base: 'BrowserStack',
+				browser: 'Firefox',
+				os: 'Windows',
+				'os_version': '7',
+				project: 'modernizr-detects',
+				build: 'Automated (Karma)',
+				name: 'Firefox'
+			},
+			'BS-IE9': {
+				base: 'BrowserStack',
+				browser: 'IE',
+				'browser_version': '9',
+				os: 'Windows',
+				'os_version': '7',
+				project: 'modernizr-detects',
+				build: 'Automated (Karma)',
+				name: 'IE9'
+			},
+		},
+		browsers: ['BS-Chrome', 'BS-Firefox', 'BS-IE9'],
+		singleRun: true,
+		concurrency: Infinity
+	});
 
-
-    // frameworks to use
-    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['browserify', 'mocha'],
-
-
-    // list of files / patterns to load in the browser
-    files: [
-      'test-dist/modernizr.js',
-      'test/automatic/**/*.html',
-      'test/automatic/**/*.js'
-    ],
-
-
-    // list of files to exclude
-    exclude: [
-    ],
-
-
-    // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-	  'test/automatic/**/*.html': 'html2js',
-	  'test/automatic/**/*.js': 'browserify'
-    },
-
-
-    // test results reporter to use
-    // possible values: 'dots', 'progress'
-    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['mocha'],
-
-
-    // web server port
-    port: 9876,
-
-
-    // enable / disable colors in the output (reporters and logs)
-    colors: true,
-
-
-    // level of logging
-    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
-
-
-    // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: false,
-
-    browserStack: {
-      startTunnel: true
-    },
-
-    customLaunchers: {
-      'BS-Chrome': {
-        base: 'BrowserStack',
-        browser: 'chrome',
-        browser_version: '48',
-        os: 'Windows',
-        os_version: '7'
-      },
-      'BS-Firefox': {
-        base: 'BrowserStack',
-        browser: 'firefox',
-        browser_version: '44',
-        os: 'Windows',
-        os_version: '7'
-      },
-      'BS-IE9': {
-        base: 'BrowserStack',
-        browser: 'ie',
-        browser_version: '9',
-        os: 'Windows',
-        os_version: '7'
-      }
-    },
-
-
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['BS-Chrome', 'BS-Firefox', 'BS-IE9'],
-
-
-    // Continuous Integration mode
-    // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true,
-
-    // Concurrency level
-    // how many browser should be started simultaneous
-    concurrency: Infinity
-  })
-}
+};
