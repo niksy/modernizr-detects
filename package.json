@@ -1,6 +1,6 @@
 {
   "name": "modernizr-detects",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Feature detection not suitable for Modernizr, but within it’s API for easier usage.",
   "author": "Ivan Nikolić <niksy5@gmail.com> (http://ivannikolic.com)",
   "license": "MIT",
