@@ -15,8 +15,8 @@
   "scripts": {
     "lint": "eslint '{feature-detects/*,test/*}.js'",
     "test": "npm run lint && npm run test:automated",
-    "test:automated": "karma start",
-    "test:automated:local": "karma start --browsers Chrome",
+    "test:automated": "gulp test:prepare && karma start",
+    "test:automated:local": "gulp test:prepare && karma start --browsers Chrome",
     "test:automated:local:watch": "npm run test:automated:local -- --auto-watch --no-single-run",
     "test:manual:local": "gulp test:local:manual --watch"
   },
