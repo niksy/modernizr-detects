@@ -62,16 +62,23 @@ module.exports = function(config) {
 
     customLaunchers: {
       'BS-Chrome': {
-      	base: 'BrowserStack',
+        base: 'BrowserStack',
         browser: 'chrome',
         browser_version: '48',
         os: 'Windows',
         os_version: '7'
       },
       'BS-Firefox': {
-      	base: 'BrowserStack',
+        base: 'BrowserStack',
         browser: 'firefox',
         browser_version: '44',
+        os: 'Windows',
+        os_version: '7'
+      },
+      'BS-IE9': {
+        base: 'BrowserStack',
+        browser: 'ie',
+        browser_version: '9',
         os: 'Windows',
         os_version: '7'
       }
@@ -80,7 +87,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['BS-Chrome', 'BS-Firefox'],
+    browsers: ['BS-Chrome', 'BS-Firefox', 'BS-IE9'],
 
 
     // Continuous Integration mode
