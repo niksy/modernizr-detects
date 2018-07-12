@@ -32,13 +32,34 @@ define(['Modernizr', 'createElement', 'addTest'], function ( Modernizr, createEl
 			var container = document.body;
 			var detectionTimer;
 
-			function done () {
+			function done ( bool ) {
 				if ( typeof detectionTimer !== 'undefined' ) {
 					clearTimeout(detectionTimer);
 				}
-				cb(adBlockActive);
+				cb(bool);
 				container.removeChild(el);
 				el = null;
+			}
+
+			function getAdBlockActiveState () {
+				var bool = false;
+				try {
+					bool = (
+						container.getAttribute('abp') !== null ||
+						el.style.display === 'none' ||
+						el.style.visibility === 'hidden' ||
+						el.offsetParent === null ||
+						el.offsetHeight === 0 ||
+						el.offsetLeft === 0 ||
+						el.offsetTop === 0 ||
+						el.offsetWidth === 0 ||
+						el.clientHeight === 0 ||
+						el.clientWidth === 0
+					);
+				} catch ( err ) {
+					bool = false;
+				}
+				return bool;
 			}
 
 			el.className = 'pub_300x250 pub_300x250m pub_728x90 text-ad textAd text_ad text_ads text-ads';
@@ -46,30 +67,16 @@ define(['Modernizr', 'createElement', 'addTest'], function ( Modernizr, createEl
 
 			container.appendChild(el);
 
-			try {
-				adBlockActive = (
-					container.getAttribute('abp') !== null ||
-					el.style.display === 'none' ||
-					el.style.visibility === 'hidden' ||
-					el.offsetParent === null ||
-					el.offsetHeight === 0 ||
-					el.offsetLeft === 0 ||
-					el.offsetTop === 0 ||
-					el.offsetWidth === 0 ||
-					el.clientHeight === 0 ||
-					el.clientWidth === 0
-				);
-			} catch ( err ) {
-				adBlockActive = false;
-			}
+			adBlockActive = getAdBlockActiveState();
 
 			if ( adBlockActive ) {
-				done();
+				done(adBlockActive);
 				return;
 			}
 
 			detectionTimer = setTimeout(function () {
-				done();
+				adBlockActive = getAdBlockActiveState();
+				done(adBlockActive);
 			}, detectionTimerInterval);
 
 		}
