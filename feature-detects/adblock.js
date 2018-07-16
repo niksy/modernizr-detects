@@ -13,9 +13,9 @@ define(['Modernizr', 'createElement', 'addTest'], function ( Modernizr, createEl
 
 	Modernizr.addAsyncTest(function () {
 
-		function onParsed ( cb ) {
+		function onLoaded ( cb ) {
 			function listener () {
-				if ( /^(?:interactive|complete)$/.test(document.readyState) ) {
+				if ( /^complete$/.test(document.readyState) ) {
 					document.removeEventListener('readystatechange', listener);
 					cb();
 				}
@@ -81,7 +81,7 @@ define(['Modernizr', 'createElement', 'addTest'], function ( Modernizr, createEl
 
 		}
 
-		onParsed(function () {
+		onLoaded(function () {
 			detectAdBlocker(function ( bool ) {
 				addTest('adblock', bool);
 			});
