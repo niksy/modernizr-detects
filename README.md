@@ -17,7 +17,7 @@ Use it as part of `customTests` feature of [Customizr][customizr].
 Since that project is currently unmaintained, I’m maintaining [fork][customizr-fork] ([Gulp][customizr-fork-gulp] and [Grunt][customizr-fork-grunt] plugin also) which is updated to work with new Modernizr features.
 
 ```js
-var customizr = require('customizr');
+const customizr = require('customizr');
 
 customizr({
 	// … Customizr config
@@ -25,11 +25,9 @@ customizr({
 		'print',
 		'proxybrowser',
 		'oninputproper'
-	].map(function ( name ) {
-		return require.resolve('modernizr-detects/feature-detects/' + name);
-	})
-}, function () {
-    // All done!
+	].map(( featureName ) => require.resolve(`modernizr-detects/feature-detects/${featureName}`))
+}, () => {
+	// All done!
 });
 ```
 
