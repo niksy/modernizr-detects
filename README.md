@@ -10,6 +10,12 @@ Feature detection not suitable for [Modernizr][modernizr], but within it’s API
 npm install modernizr-detects --save-dev
 ```
 
+### ES Modules
+
+```sh
+npm install modernizr-esm modernizr-detects --save
+```
+
 ## Usage
 
 Use it as part of `customTests` feature of [Customizr][customizr].
@@ -29,6 +35,16 @@ customizr({
 }, () => {
 	// All done!
 });
+```
+
+### ES Modules
+
+There is no need for build step. Import feature detection and use it’s return value.
+
+```js
+import print from 'modernizr-detects/feature-detects/esm/print';
+
+console.log(print); // Is printing supported?
 ```
 
 ## List of feature detections
