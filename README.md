@@ -63,9 +63,9 @@ Tested in IE9+ and all modern browsers.
 
 ## Test
 
-For local automated tests, run `npm run test:automated:local` (append `:watch` for watcher support).
+For automated tests, run `npm run test:automated` (append `:watch` for watcher support).
 
-For manual tests, run `npm run test:manual:local` and open <http://localhost:9000/> in your browser.
+For manual tests, run `npm run test:manual` and open <http://localhost:9000/> in your browser.
 
 ## License
 

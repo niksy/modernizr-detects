@@ -7,6 +7,7 @@
 	"overrides": [
 		{
 			"files": [
+				"test/manual/webpack.config.js",
 				"gulpfile.js",
 				"karma.conf.js"
 			],

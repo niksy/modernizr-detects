@@ -1,56 +1,23 @@
 'use strict';
 
-module.exports = function ( config ) {
+const path = require('path');
 
-	config.set({
-		basePath: '',
-		frameworks: ['mocha'],
-		files: [
-			'test-dist/modernizr.js',
-			'test/automated/**/*.html',
-			'test/automated/**/.webpack.js'
-		],
-		exclude: [],
-		preprocessors: {
-			'test/automated/**/*.html': ['html2js'],
-			'test/automated/**/.webpack.js': ['webpack', 'sourcemap']
-		},
-		reporters: ['mocha'],
-		port: 9001,
-		colors: true,
-		logLevel: config.LOG_INFO,
-		autoWatch: false,
+let config;
+
+const local = typeof process.env.CI === 'undefined' || process.env.CI === 'false';
+const port = 9001;
+
+if ( local ) {
+	config = {
+		browsers: ['Chrome'],
+	};
+} else {
+	config = {
 		browserStack: {
 			startTunnel: true,
 			project: 'modernizr-detects',
 			name: 'Automated (Karma)',
 			build: 'Automated (Karma)'
-		},
-		client: {
-			captureConsole: true,
-			mocha: {
-				ui: 'bdd'
-			}
-		},
-		browserConsoleLogOptions: {
-			level: 'log',
-			format: '%b %T: %m',
-			terminal: true
-		},
-		webpack: {
-			mode: 'none',
-			devtool: 'cheap-module-inline-source-map',
-			module: {
-				rules: [
-					{
-						test: /\.js$/,
-						exclude: /node_modules/,
-						use: [{
-							loader: 'babel-loader'
-						}]
-					}
-				]
-			}
 		},
 		customLaunchers: {
 			'BS-Chrome': {
@@ -82,9 +49,55 @@ module.exports = function ( config ) {
 				name: 'IE9'
 			},
 		},
-		browsers: ['BS-Chrome', 'BS-Firefox', 'BS-IE9'],
+		browsers: ['BS-Chrome', 'BS-Firefox', 'BS-IE9']
+	};
+}
+
+module.exports = function ( baseConfig ) {
+
+	baseConfig.set(Object.assign({
+		basePath: '',
+		frameworks: ['mocha', 'fixture'],
+		files: [
+			'test-dist/modernizr.js',
+			'test/automated/**/*.html',
+			'test/automated/**/.webpack.js'
+		],
+		exclude: [],
+		preprocessors: {
+			'test/automated/**/*.html': ['html2js'],
+			'test/automated/**/.webpack.js': ['webpack', 'sourcemap']
+		},
+		reporters: ['mocha'],
+		port: port,
+		colors: true,
+		logLevel: baseConfig.LOG_INFO,
+		autoWatch: false,
+		client: {
+			captureConsole: true
+		},
+		browserConsoleLogOptions: {
+			level: 'log',
+			format: '%b %T: %m',
+			terminal: true
+		},
+		webpack: {
+			mode: 'none',
+			devtool: 'cheap-module-inline-source-map',
+			module: {
+				rules: [
+					{
+						test: /\.js$/,
+						exclude: /node_modules/,
+						use: [{
+							loader: 'babel-loader'
+						}]
+					}
+				]
+			}
+		},
 		singleRun: true,
 		concurrency: Infinity
-	});
+	}, config));
 
 };

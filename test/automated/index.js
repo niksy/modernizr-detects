@@ -3,19 +3,16 @@
 const assert = require('assert');
 const bowser = require('bowser');
 
-require('classlist.js');
-
 describe('Basic', function () {
 
 	const html = document.getElementsByTagName('html')[0];
 
 	before(function () {
-		const fixture = window.__html__['test/automated/fixtures/index.html'];
-		document.body.insertAdjacentHTML('beforeend', `<div id="fixture">${fixture}</div>`);
+		window.fixture.load('/test/automated/fixtures/index.html');
 	});
 
 	after(function () {
-		document.body.removeChild(document.getElementById('fixture'));
+		window.fixture.cleanup();
 	});
 
 	it('should test feature "adblock"', function ( done ) {
