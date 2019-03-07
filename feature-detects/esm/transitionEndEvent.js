@@ -20,6 +20,8 @@
 import Modernizr from 'modernizr-esm/src/Modernizr';
 import prefixed from 'modernizr-esm/src/prefixed';
 
+var isBrowser = typeof window !== 'undefined';
+
 var transitionEndEventNames = {
 	'WebkitTransition': 'webkitTransitionEnd',
 	'msTransition': 'MSTransitionEnd',
@@ -30,7 +32,7 @@ var transitionEndEventNames = {
 var eventValue = transitionEndEventNames[prefixed('transition')];
 
 // Falsy value on Android 4.1-4.3 default browser
-if ( /Android 4\.[123]/.test(navigator.userAgent) ) {
+if ( isBrowser && /Android 4\.[123]/.test(navigator.userAgent) ) {
 	eventValue = transitionEndEventNames['WebkitTransition'];
 }
 

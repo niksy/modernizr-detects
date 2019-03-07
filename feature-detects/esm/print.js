@@ -20,7 +20,9 @@ it’s mobile platform.
 
 import Modernizr from 'modernizr-esm/src/Modernizr';
 
+var isBrowser = typeof window !== 'undefined';
+
 var regex = /(iphone|ipod|((?:android)?.*?mobile)|blackberry|nokia)|kindle|silk/i;
-Modernizr.addTest('print', !regex.test( navigator.userAgent ));
+Modernizr.addTest('print', isBrowser && !regex.test( navigator.userAgent ));
 
 export default Modernizr.print;

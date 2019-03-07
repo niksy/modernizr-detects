@@ -2,6 +2,10 @@
 
 ## [Unreleased][]
 
+### Added
+
+- Add check for browser environment in ESM version
+
 ## [1.2.0][] - 2019-01-28
 
 ### Added

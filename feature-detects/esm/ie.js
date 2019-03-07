@@ -16,9 +16,11 @@ Detects the Internet Explorer browser and it’s version.
 
 import Modernizr from 'modernizr-esm/src/Modernizr';
 
+var isBrowser = typeof window !== 'undefined';
+
 /* eslint-disable */
 // https://gist.github.com/padolsey/527683#comment-786682
-var ie = (function(){
+var ie = isBrowser && (function(){
 // for-loop saves characters over while
 for( var v = 3,
          // b just as good as a div with 2 fewer characters
